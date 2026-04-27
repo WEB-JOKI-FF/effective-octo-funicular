@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joki FF Elite 🔥</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  color:#fff;
+}
+.container{
+  padding:20px;
+  max-width:400px;
+  margin:auto;
+}
+h1{
+  text-align:center;
+  color:#22c55e;
+}
+.card{
+  background:#111827;
+  padding:15px;
+  border-radius:12px;
+  margin-top:15px;
+  box-shadow:0 0 15px rgba(0,255,150,0.2);
+}
+select,input,button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+}
+input,select{
+  background:#1f2937;
+  color:#fff;
+}
+button{
+  background:#22c55e;
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:hover{
+  background:#16a34a;
+}
+.info{
+  margin-top:10px;
+  background:#1f2937;
+  padding:10px;
+  border-radius:8px;
+  font-size:14px;
+}
+.footer{
+  text-align:center;
+  margin-top:20px;
+  opacity:0.6;
+  font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>JOKI FF ELITE 🔥</h1>
+
+  <div class="card">
+    <input type="text" id="nickname" placeholder="Masukkan Nickname FF">
+
+    <select id="rank" onchange="updateInfo()">
+      <option value="">Pilih Rank</option>
+      <option value="Bronze">Bronze</option>
+      <option value="Silver">Silver</option>
+      <option value="Gold">Gold</option>
+      <option value="Platinum">Platinum</option>
+      <option value="Diamond">Diamond</option>
+      <option value="Heroic">Heroic</option>
+    </select>
+
+    <div class="info" id="info">
+      Harga: - <br>
+      Estimasi: -
+    </div>
+
+    <button onclick="order()">ORDER SEKARANG</button>
+  </div>
+
+  <div class="footer">
+    © Roby Joki FF
+  </div>
+</div>
+
+<!-- ✅ Firebase (versi aman untuk HP & Acode) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+<script>
+// 🔥 GANTI DENGAN CONFIG FIREBASE KAMU
+const firebaseConfig = {
+  apiKey: "AIzaSyDgCpWXHCdv8d5dN3IF4Viiaf8ql44B_1g",
+  authDomain: "webmabarff.firebaseapp.com",
+  databaseURL: "https://webmabarff-default-rtdb.firebaseio.com/",
+  projectId: "webmabarff",
+  storageBucket: "ISI_STORAGE",
+  messagingSenderId: "580938508600",
+  appId: "1:580938508600:web:1488dad377931d214139cd"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// 🔥 DATA HARGA & WAKTU
+const dataRank = {
+  Bronze: { harga: 5000, waktu: "10 Menit" },
+  Silver: { harga: 10000, waktu: "20 Menit" },
+  Gold: { harga: 15000, waktu: "30 Menit" },
+  Platinum: { harga: 25000, waktu: "45 Menit" },
+  Diamond: { harga: 40000, waktu: "1 Jam" },
+  Heroic: { harga: 60000, waktu: "1-2 Jam" }
+};
+
+// 🔥 UPDATE INFO OTOMATIS
+function updateInfo(){
+  const rank = document.getElementById("rank").value;
+  const info = document.getElementById("info");
+
+  if(rank === ""){
+    info.innerHTML = "Harga: - <br> Estimasi: -";
+    return;
+  }
+
+  const data = dataRank[rank];
+  info.innerHTML = `
+    Harga: Rp ${data.harga.toLocaleString()} <br>
+    Estimasi: ${data.waktu}
+  `;
+}
+
+// 🔥 ORDER
+function order(){
+  const nickname = document.getElementById("nickname").value;
+  const rank = document.getElementById("rank").value;
+
+  if(nickname === "" || rank === ""){
+    alert("Lengkapi data dulu!");
+    return;
+  }
+
+  const data = dataRank[rank];
+
+  // Simpan ke Firebase
+  db.ref("orders").push({
+    nickname: nickname,
+    rank: rank,
+    harga: data.harga,
+    estimasi: data.waktu,
+    waktu: new Date().toLocaleString()
+  });
+
+  // Kirim ke WhatsApp
+  const pesan = `🔥 ORDER JOKI FF 🔥
+Nickname: ${nickname}
+Rank: ${rank}
+Harga: Rp ${data.harga}
+Estimasi: ${data.waktu}`;
+
+  const url = "https://wa.me/6282273146188?text=" + encodeURIComponent(pesan);
+  window.open(url, "_blank");
+}
+
+console.log("WEB JOKI SIAP 🔥");
+</script>
+
+</body>
+</html>
